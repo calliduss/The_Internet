@@ -14,12 +14,14 @@ public class FramesPage extends BasePageObject {
         super(driver, log);
     }
 
+    /** Click on link with nested frames */
     public NestedFramesPage openNestedFramesPage() {
         log.info("Opening nested frames page");
         click(nestedFramesLink);
         return new NestedFramesPage(driver, log);
     }
 
+    /** Click on link with text editor */
     public WYSIWYGEditorPage openEditorPage() {
         log.info("Opening WYSIWYG editor page");
         click(iFrameLink);

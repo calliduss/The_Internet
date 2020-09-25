@@ -14,6 +14,7 @@ public class WYSIWYGEditorPage extends BasePageObject {
         super(driver, log);
     }
 
+    /** Type a text into editor */
     public void typeTextIntoEditorWindow(String text) {
         log.info("Entering a text into editor window");
         driver.switchTo().frame(find(editorFrame));

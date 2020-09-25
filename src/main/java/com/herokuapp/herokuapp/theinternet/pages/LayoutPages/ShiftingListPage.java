@@ -13,6 +13,7 @@ public class ShiftingListPage extends BasePageObject {
         super(driver, log);
     }
 
+    /** Get list of all quotes */
     public String getListOfQuotes() {
         log.info("Getting a list of quotes");
         return find(listOfPhrases).getText();

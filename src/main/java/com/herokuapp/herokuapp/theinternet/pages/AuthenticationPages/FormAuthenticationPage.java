@@ -16,6 +16,7 @@ public class FormAuthenticationPage extends BasePageObject {
         super(driver, log);
     }
 
+    /** Type credentials to login the secure area */
     public SecureAreaPage loginToSecureArea(String username, String password) {
         log.info("logging to secure area");
         type(username, usernameField);
@@ -24,6 +25,7 @@ public class FormAuthenticationPage extends BasePageObject {
         return new SecureAreaPage(driver, log);
     }
 
+    /** Get an error message if the credentials are incorrect */
     public String getErrorMessage() {
         log.info("Getting an error message");
         return find(errorMessage).getText();

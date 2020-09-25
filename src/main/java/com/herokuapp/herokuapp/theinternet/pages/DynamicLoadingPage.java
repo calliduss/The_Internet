@@ -17,19 +17,19 @@ public class DynamicLoadingPage extends BasePageObject {
         super(driver, log);
     }
 
-    /** Check http status code for an image */
+    /** Click link with an element rendered after the fact */
     public void openExampleLink() {
         log.info("Clicking example link on the page");
         click(exampleLink);
     }
 
-    /** Check http status code for an image */
+    /** Start calculation */
     public void startCalculation() {
         log.info("Clicking on start button");
         click(startButton);
     }
 
-    /** Check http status code for an image */
+    /** Get a message about the calculation result */
     public String getFinishMessage() {
 //        waitForVisibilityOf(finishText, 5);
         log.info("Getting text after calculation");

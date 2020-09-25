@@ -13,6 +13,7 @@ public class FileDownloadPage extends BasePageObject {
         super(driver, log);
     }
 
+    /** Download a particular file from the list */
     public void downloadFile(String fileName) {
         log.info(String.format("Downloading a file with the specified name: %s", fileName));
         By link = By.linkText(fileLink.replace("*#*", fileName));

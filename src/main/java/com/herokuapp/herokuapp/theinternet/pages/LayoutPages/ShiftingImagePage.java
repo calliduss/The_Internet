@@ -14,6 +14,7 @@ public class ShiftingImagePage extends BasePageObject {
         super(driver, log);
     }
 
+    /** Compare the current page with the reference layout */
     public OcularResult comparePageWithMockup() {
         log.info("Comparing a page with a mock-up");
         return Ocular.snapshot().from(this)

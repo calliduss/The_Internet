@@ -10,6 +10,7 @@ public class InfiniteScrollPage extends BasePageObject {
         super(driver, log);
     }
 
+    /** Method scrolls the page from top to bottom for a given amount of time */
     public void infiniteScroll(int seconds) {
         log.info(String.format("Scrolling the page for $s seconds", seconds));
         long currentTimeMillis = System.currentTimeMillis();

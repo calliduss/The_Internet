@@ -18,6 +18,7 @@ public class NestedFramesPage extends BasePageObject {
         super(driver, log);
     }
 
+    /** Find nested iframes and switch between them */
     public void switchBetweenNestedFrames() {
         log.info("Switching between nested iframes inside top iframe");
         driver.switchTo().frame(frameTop);
@@ -26,11 +27,13 @@ public class NestedFramesPage extends BasePageObject {
         driver.switchTo().frame(frameRight);
     }
 
+    /** Find iframe on the bottom of the page and switch to it */
     public void switchToBottomFrame() {
         log.info("Switching to the bottom iframe");
         driver.switchTo().frame(frameBottom);
     }
 
+    /** Get a text on top of an iframe */
     public String getTextInsideFrame() {
         log.info("Getting a text inside an iframe");
         return find(textInFrame).getText();

@@ -16,21 +16,22 @@ public class FileUploadPage extends BasePageObject {
         super(driver, log);
     }
 
+    /** Upload a specific file via button */
     public void uploadFile(String fileName) {
         log.info("Uploading a file");
         find(chooseFileButton).sendKeys(getFilePath(fileName));
         click(fileUploadButton);
     }
 
+    /** Upload a specific file via drug&drop functionality */
     public void dragAndDropFileUpload(String fileName) {
         log.info("Dragging a file to upload");
         dropFile(getFilePath(fileName), find(dropArea), 0, 0);
     }
 
+    /** Get uploaded file name */
     public String getUploadedFileText() {
         log.info("Getting the text of an uploaded file");
         return find(uploadedFile).getText();
     }
-
-    //can I just generate random file instead of using local storage? todo
 }

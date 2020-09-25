@@ -96,7 +96,7 @@ public class BasePageObject {
     }
 
     /**
-     * TBD
+     * Get an alert message
      */
     public String getBrowserAlertText() {
         Alert alert = driver.switchTo().alert();

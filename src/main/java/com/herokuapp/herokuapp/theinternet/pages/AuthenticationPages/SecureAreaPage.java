@@ -14,12 +14,14 @@ public class SecureAreaPage extends BasePageObject {
         super(driver, log);
     }
 
+    /** Click the logout button */
     public FormAuthenticationPage logout() {
         log.info("Logging out the secure area");
         click(logoutButton);
         return new FormAuthenticationPage(driver, log);
     }
 
+    /** Get a success message if the credentials are correct */
     public String getSuccessMessage() {
         log.info("Getting successful login message");
         return find(successMessage).getText();

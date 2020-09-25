@@ -17,6 +17,7 @@ public class ShiftingMenuElementPage extends BasePageObject {
         super(driver, log);
     }
 
+    /** Compare the current position of the elements with the reference layout */
     public OcularResult compareElementOnPageWithMockup() {
         log.info("Comparing the position of an element on a page with a mock-up");
         return Ocular.snapshot().from(this)     //read the @Snap value

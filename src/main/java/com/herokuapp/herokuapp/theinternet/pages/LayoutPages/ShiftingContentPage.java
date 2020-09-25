@@ -15,18 +15,21 @@ public class ShiftingContentPage extends BasePageObject {
         super(driver, log);
     }
 
+    /** Click on link with a shifting menu */
     public ShiftingMenuElementPage openShiftingMenuElementPage() {
         log.info("Opening the page with a shifting menu item");
         click(menuElementLink);
         return new ShiftingMenuElementPage(driver, log);
     }
 
+    /** Click on link with a shifting image */
     public ShiftingImagePage openShiftingImagePage() {
         log.info("Opening the page with a shifting image");
         click(imageLink);
         return new ShiftingImagePage(driver, log);
     }
 
+    /** Click on link with a shifting list */
     public ShiftingListPage openShiftingListPage() {
         log.info("Opening the page with a shifting list items");
         click(listLink);
