@@ -11,10 +11,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 public class BasePageObject {
 
@@ -174,10 +171,31 @@ public class BasePageObject {
         return driver.switchTo().alert();
     }
 
+    /** Handle authentication alert */
+    protected void authenticateAlertPopup(String login, String password, boolean isHttps) {
+        var credentials = login + ":" + password + "@";
+        var urlParts = driver.getCurrentUrl().split("//");
+        StringBuilder stringBuilder = new StringBuilder();
+
+        for (String part : urlParts) {
+            if (part.equals("http:")) {
+                if (isHttps) {
+                    stringBuilder.append("https://").append(credentials);
+                } else {
+                    stringBuilder.append("http://").append(credentials);
+                }
+            }
+            else { stringBuilder.append(part); }
+        }
+        String url = stringBuilder.toString();
+
+        ((JavascriptExecutor)driver).executeScript("window.open('" + url + "')");
+    }
+
     /**
      * Switch to a bookmark with a given name
      */
-    protected void switchToWindowWithTitle(String expectedTitle) {
+    protected void switchToTabWithTitle(String expectedTitle) {
         String currentWindow = driver.getWindowHandle();
         Set<String> allWindows = driver.getWindowHandles();
         Iterator<String> windowsIterator = allWindows.iterator();
@@ -204,6 +222,16 @@ public class BasePageObject {
     }
 
     /**
+     * Close old tab and switch to a recently opened bookmark
+     */
+    protected void switchToRecentlyOpenedTab() {
+        ArrayList<String> tabs = new ArrayList<> (driver.getWindowHandles());
+        driver.switchTo().window(tabs.get(0));
+        driver.close();
+        driver.switchTo().window(tabs.get(1));
+    }
+
+    /**
      * Wait for specific ExpectedCondition for the given amount of time in seconds
      */
     private void waitFor(ExpectedCondition<WebElement> condition, Integer timeOutInSeconds) {
@@ -227,5 +255,21 @@ public class BasePageObject {
             }
             attempts++;
         }
+    }
+
+    /**
+     * Takes a parent element and strips out the textContent of all child elements and returns textNode content only
+     * @param e the parent element
+     * @return the text from the child textNodes
+     */
+    public String getTextNode(WebElement e)
+    {
+        String text = e.getText().trim();
+        List<WebElement> children = e.findElements(By.xpath("./*"));
+        for (WebElement child : children)
+        {
+            text = text.replaceFirst(child.getText(), "").trim();
+        }
+        return text.strip();
     }
 }

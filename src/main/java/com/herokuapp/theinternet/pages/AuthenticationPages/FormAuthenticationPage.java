@@ -17,7 +17,7 @@ public class FormAuthenticationPage extends BasePageObject {
     }
 
     /** Type credentials to login the secure area */
-    public SecureAreaPage loginToSecureArea(String username, String password) {
+    public SecureAreaPage loginWith(String username, String password) {
         log.info("logging to secure area");
         type(username, usernameField);
         type(password, passwordField);

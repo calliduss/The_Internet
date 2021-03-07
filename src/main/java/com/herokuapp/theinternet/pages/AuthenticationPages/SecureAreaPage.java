@@ -7,7 +7,7 @@ import org.openqa.selenium.WebDriver;
 
 public class SecureAreaPage extends BasePageObject {
 
-    private By successMessage = By.id("data-alert");
+    private By successMessage = By.id("flash");
     private By logoutButton = By.xpath("//*[@href='/logout']");
 
     public SecureAreaPage(WebDriver driver, Logger log) {
@@ -24,6 +24,6 @@ public class SecureAreaPage extends BasePageObject {
     /** Get a success message if the credentials are correct */
     public String getSuccessMessage() {
         log.info("Getting successful login message");
-        return find(successMessage).getText();
+        return getTextNode(find(successMessage));
     }
 }

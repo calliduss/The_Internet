@@ -14,15 +14,28 @@ import static com.herokuapp.theinternet.base.BrowserDriverFactory.setContext;
 
 public class BaseTest {
 
+    public TestUtilities testUtilities;
+
     protected WebDriver driver;
     protected Logger log;
+
+    public boolean hasBasicAuthChromeExtension;
 
     private static ITestContext context;
 
     @Parameters({"browser", "chromeProfile", "deviceName"})
     @BeforeMethod(alwaysRun = true)
-    public void setUp(@Optional("chrome") String browser, @Optional String profile,
-                      @Optional String deviceName, ITestContext context) {
+    public void setUp(@Optional("chrome") String browser,
+                      @Optional String profile,
+                      @Optional String deviceName,
+                      @Optional Object[] isBasicAuthChromeExtensionEnabled,
+                      ITestContext context) {
+
+        testUtilities = new TestUtilities();
+
+        if (isBasicAuthChromeExtensionEnabled.length > 0) {
+            hasBasicAuthChromeExtension = (boolean) isBasicAuthChromeExtensionEnabled[0];
+        }
 
         // Specifying the path for the mockups and for the layout comparison result
         Ocular.config()
@@ -36,7 +49,7 @@ public class BaseTest {
         ConfigFactory.setProperty("env", Servers.PROD.getServer());
         Environment cfg = ConfigFactory.create(Environment.class);
 
-        BrowserDriverFactory factory = new BrowserDriverFactory(browser, log);
+        BrowserDriverFactory factory = new BrowserDriverFactory(browser, log, hasBasicAuthChromeExtension);
 
         if (profile != null) {
             driver = factory.createChromeWithProfile(profile);
@@ -56,5 +69,10 @@ public class BaseTest {
     public void tearDown() {
         log.info("Close driver");
         driver.quit();
+    }
+
+    @DataProvider(name = "isBasicAuthChromeExtensionEnabled")
+    public Object[][] isBasicAuthChromeExtensionEnabled() {
+        return new Object[][]{{false}, {true}};
     }
 }

@@ -22,7 +22,7 @@ public class WindowPage extends BasePageObject {
     /** Find page with title "New Window" and switch to it */
     public NewWindowPage switchToNewWindowPage() {
         log.info("Looking for 'New Window' page");
-        switchToWindowWithTitle("New Window");
+        switchToTabWithTitle("New Window");
         return new NewWindowPage(driver, log);
     }
 }

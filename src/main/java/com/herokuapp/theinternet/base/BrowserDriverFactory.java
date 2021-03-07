@@ -16,15 +16,17 @@ public class BrowserDriverFactory {
     private ThreadLocal<WebDriver> driver = new ThreadLocal<>();
     private String browser;
     private Logger log;
+    private boolean hasBasicAuthChromeExtension;
     private String resourcesPath = System.getProperty("user.dir")
             + File.separator + ("src")
             + File.separator + ("main")
             + File.separator + ("resources")
             + File.separator;
 
-    public BrowserDriverFactory(String browser, Logger log) {
+    public BrowserDriverFactory(String browser, Logger log, boolean hasBasicAuthChromeExtension) {
         this.browser = browser;
         this.log = log;
+        this.hasBasicAuthChromeExtension = hasBasicAuthChromeExtension;
     }
 
     public WebDriver createDriver() {
@@ -51,7 +53,6 @@ public class BrowserDriverFactory {
 
     public WebDriver createChromeWithProfile(String profile) {
         log.info("Starting chrome driver with profile " + profile);
-//        ChromeOptions options = new ChromeOptions();
         ChromeOptions options = setGeneralChromeOptions();
         options.addArguments("user-data-dir" + resourcesPath + "ChromeProfiles" + profile);
 
@@ -64,7 +65,6 @@ public class BrowserDriverFactory {
         log.info("Starting chrome driver with: " + deviceName + "emulation");
         Map<String, String> mobileEmulation = new HashMap<>();
         mobileEmulation.put("deviceName", deviceName);
-//        ChromeOptions options = new ChromeOptions();
         ChromeOptions options = setGeneralChromeOptions();
         options.setExperimentalOption("mobileEmulation", mobileEmulation);
 
@@ -73,13 +73,20 @@ public class BrowserDriverFactory {
         return driver.get();
     }
 
-    /* allows to download files **/
     private ChromeOptions setGeneralChromeOptions() {
         log.info("Set general chrome options");
+        var extensionsFolderPath = resourcesPath + File.separator + "ChromeExtensions" + File.separator;
+        var downloadedFolderPath = resourcesPath + "DownloadedFiles";
         Map<String, Object> chromePrefs = new HashMap<>();
-        chromePrefs.put("download.default_directory", resourcesPath + "DownloadedFiles");
+        chromePrefs.put("download.default_directory", downloadedFolderPath);
 
         ChromeOptions options = new ChromeOptions();
+
+        // add basicAuth chrome extension
+        if (hasBasicAuthChromeExtension) {
+            options.addExtensions(new File(extensionsFolderPath + "basicAuth.crx"));
+        }
+
         return options.setExperimentalOption("prefs", chromePrefs);
     }
 

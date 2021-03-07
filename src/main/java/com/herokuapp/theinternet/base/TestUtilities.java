@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.Random;
 
-//public class TestUtilities extends BaseTest {
 public class TestUtilities {
 
     public String getRandomString() {
