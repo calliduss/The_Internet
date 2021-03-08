@@ -15,11 +15,10 @@ import static com.herokuapp.theinternet.base.BrowserDriverFactory.setContext;
 public class BaseTest {
 
     public TestUtilities testUtilities;
+    public boolean hasBasicAuthChromeExtension;
 
     protected WebDriver driver;
     protected Logger log;
-
-    public boolean hasBasicAuthChromeExtension;
 
     private static ITestContext context;
 
