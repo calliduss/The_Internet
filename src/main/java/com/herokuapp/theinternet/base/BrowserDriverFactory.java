@@ -11,17 +11,14 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.herokuapp.theinternet.base.ResourceProvider.*;
+
 public class BrowserDriverFactory {
 
     private ThreadLocal<WebDriver> driver = new ThreadLocal<>();
     private String browser;
     private Logger log;
     private boolean hasBasicAuthChromeExtension;
-    private String resourcesPath = System.getProperty("user.dir")
-            + File.separator + ("src")
-            + File.separator + ("main")
-            + File.separator + ("resources")
-            + File.separator;
 
     public BrowserDriverFactory(String browser, Logger log, boolean hasBasicAuthChromeExtension) {
         this.browser = browser;
@@ -33,18 +30,18 @@ public class BrowserDriverFactory {
         log.info("Create driver: " + browser);
         switch (browser) {
             case "chrome":
-                System.setProperty("webdriver.chrome.driver", resourcesPath + "chromedriver.exe");
+                System.setProperty("webdriver.chrome.driver", ChromeDriverPath);
                 driver.set(new ChromeDriver(setGeneralChromeOptions()));
                 break;
 
             case "firefox":
-                System.setProperty("webdriver.gecko.driver", resourcesPath + "geckodriver.exe");
+                System.setProperty("webdriver.gecko.driver", GeckoDriverPath);
                 driver.set(new FirefoxDriver());
                 break;
 
             default:
                 System.out.println("Unable to launch the browser " + browser + " starting chrome");
-                System.setProperty("webdriver.chrome.driver", resourcesPath + "chromedriver.exe");
+                System.setProperty("webdriver.chrome.driver", ChromeDriverPath);
                 driver.set(new ChromeDriver(setGeneralChromeOptions()));
                 break;
         }
@@ -54,9 +51,9 @@ public class BrowserDriverFactory {
     public WebDriver createChromeWithProfile(String profile) {
         log.info("Starting chrome driver with profile " + profile);
         ChromeOptions options = setGeneralChromeOptions();
-        options.addArguments("user-data-dir" + resourcesPath + "ChromeProfiles" + profile);
+        options.addArguments("user-data-dir" + ChromeProfilesFolder + File.separator + profile);
 
-        System.setProperty("webdriver.chrome.driver", resourcesPath + "chromedriver.exe");
+        System.setProperty("webdriver.chrome.driver", ChromeDriverPath);
         driver.set(new ChromeDriver(options));
         return driver.get();
     }
@@ -68,23 +65,21 @@ public class BrowserDriverFactory {
         ChromeOptions options = setGeneralChromeOptions();
         options.setExperimentalOption("mobileEmulation", mobileEmulation);
 
-        System.setProperty("webdriver.chrome.driver", resourcesPath + "chromedriver.exe");
+        System.setProperty("webdriver.chrome.driver", ChromeDriverPath);
         driver.set(new ChromeDriver(options));
         return driver.get();
     }
 
     private ChromeOptions setGeneralChromeOptions() {
         log.info("Set general chrome options");
-        var extensionsFolderPath = resourcesPath + File.separator + "ChromeExtensions" + File.separator;
-        var downloadedFolderPath = resourcesPath + "DownloadedFiles";
         Map<String, Object> chromePrefs = new HashMap<>();
-        chromePrefs.put("download.default_directory", downloadedFolderPath);
+        chromePrefs.put("download.default_directory", DownloadedFilesFolder);
 
         ChromeOptions options = new ChromeOptions();
 
         // add basicAuth chrome extension
         if (hasBasicAuthChromeExtension) {
-            options.addExtensions(new File(extensionsFolderPath + "basicAuth.crx"));
+            options.addExtensions(new File(ChromeExtensionsFolder + File.separator + "basicAuth.crx"));
         }
 
         return options.setExperimentalOption("prefs", chromePrefs);

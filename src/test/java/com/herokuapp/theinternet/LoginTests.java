@@ -17,9 +17,9 @@ public class LoginTests extends BaseTest {
         var login = "tomsmith";
         var password = "SuperSecretPassword!";
         var expectedSuccessfulLoginMessage = "You logged into a secure area!";
-        WelcomePage welcomePage = new WelcomePage(driver, log);
-        FormAuthenticationPage formAuthenticationPage = new FormAuthenticationPage(driver, log);
-        SecureAreaPage secureAreaPage = new SecureAreaPage(driver, log);
+        var welcomePage = new WelcomePage(driver, log);
+        var formAuthenticationPage = new FormAuthenticationPage(driver, log);
+        var secureAreaPage = new SecureAreaPage(driver, log);
 
         // Act
         welcomePage.openFormAuthenticationPage();
@@ -34,8 +34,8 @@ public class LoginTests extends BaseTest {
         var login = "admin";
         var password = "admin";
         var expectedSuccessfulLoginMessage = "Congratulations! You must have the proper credentials.";
-        WelcomePage welcomePage = new WelcomePage(driver, log);
-        BasicAuthPage basicAuthPage = new BasicAuthPage(driver, log);
+        var welcomePage = new WelcomePage(driver, log);
+        var basicAuthPage = new BasicAuthPage(driver, log);
 
         welcomePage.openBasicAuthPage();
         if (!isChromeExtensionEnabled) { basicAuthPage.loginWith(login, password); }

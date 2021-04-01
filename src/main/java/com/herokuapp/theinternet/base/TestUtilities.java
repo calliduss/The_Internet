@@ -3,11 +3,16 @@ package com.herokuapp.theinternet.base;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.nio.file.FileAlreadyExistsException;
+import java.util.Arrays;
+import java.util.Objects;
 import java.util.Random;
+
+import static com.herokuapp.theinternet.base.ResourceProvider.TempFilesFolder;
 
 public class TestUtilities {
 
-    public String getRandomString() {
+    public String generateRandomStringValue() {
         String ALLOWED_CHARS = "abcdefghijklmnopqrstuvwxyz1234567890";
         StringBuilder sb = new StringBuilder();
         Random random = new Random();
@@ -15,8 +20,7 @@ public class TestUtilities {
             int index = (int) (random.nextFloat() * ALLOWED_CHARS.length());
             sb.append(ALLOWED_CHARS.charAt(index));
         }
-        String emailDomain = sb.toString();
-        return emailDomain;
+        return sb.toString();
     }
 
     public String getNameOfLatestFileFromDir(String dirPath) {
@@ -68,19 +72,38 @@ public class TestUtilities {
         if (isStringNullOrWhiteSpace(fileName) && isStringNullOrWhiteSpace(fileExtension)) {
             throw new IllegalArgumentException("File name and file extension must be specified!");
         }
-        RandomAccessFile file = new RandomAccessFile(fileName + fileExtension, "rw");
-        try (file) {
-            file.setLength(sizeInBytes);
+        File file = new File(TempFilesFolder + File.separator, fileName + fileExtension);
+        if (file.exists()) {
+            throw new FileAlreadyExistsException("file with name " + fileName + " already exists");
         }
-        return file.toString();
+
+        RandomAccessFile randomAccessFile = new RandomAccessFile(file, "rw");
+        try (randomAccessFile) {
+            randomAccessFile.setLength(sizeInBytes);
+        }
+        return file.getAbsolutePath();
     }
 
-    public String createTempFile(String fileName, String fileExtension) throws IOException {
+    public String createTempFile(String fileName, String fileExtension) {
         if (isStringNullOrWhiteSpace(fileName) && isStringNullOrWhiteSpace(fileExtension)) {
             throw new IllegalArgumentException("File name and file extension must be specified!");
         }
-        File file = new File(fileName + fileExtension);
 
-        return file.toString();
+        File file = new File(TempFilesFolder + File.separator, fileName + fileExtension);
+
+        try {
+            if (file.exists()) {
+                throw new FileAlreadyExistsException("file with name " + fileName + " already exists");
+            } else {
+                file.createNewFile();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return file.getAbsolutePath();
+    }
+
+    public void cleanUpDirectory(String dirPath) {
+        Arrays.stream(Objects.requireNonNull(new File(dirPath).listFiles())).forEach(File::delete);
     }
 }

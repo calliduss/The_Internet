@@ -4,13 +4,8 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.ui.ExpectedCondition;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.Select;
-import org.openqa.selenium.support.ui.WebDriverWait;
+import org.openqa.selenium.support.ui.*;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.*;
 
 public class BasePageObject {
@@ -38,6 +33,7 @@ public class BasePageObject {
      * Find an element using the given locator
      */
     protected WebElement find(By locator) {
+        waitForVisibilityOf(locator, 5);
         return driver.findElement(locator);
     }
 
@@ -45,6 +41,7 @@ public class BasePageObject {
      * Find all elements using the given locator
      */
     protected List<WebElement> findAll(By locator) {
+        waitForVisibilityOf(locator, 5);
         return driver.findElements(locator);
     }
 
@@ -52,7 +49,7 @@ public class BasePageObject {
      * Click on an element with given locator when its visible
      */
     protected void click(By locator) {
-        waitForVisibilityOf(locator, 5);
+        waitFor(ExpectedConditions.elementToBeClickable(locator), 5);
         find(locator).click();
     }
 
@@ -62,28 +59,27 @@ public class BasePageObject {
         action.build().perform();
     }
 
-    /**
-     * Get the full path to a file in local storage
-     */
-    protected String getFilePath(String fileName) {
-        String filePath = FilenameUtils.getFullPath(Objects.requireNonNull(getClass()
-                .getClassLoader()
-                .getResource(fileName))
-                .getPath());
-
-        if (filePath == null) {
-            throw new WebDriverException("File not found: " + filePath);
-        }
-
-        return filePath;
-    }
+//    /**
+//     * Get the full path to a file in local storage
+//     */
+//    protected String getFilePath(String fileName) {
+//        String filePath = FilenameUtils.getFullPath(Objects.requireNonNull(getClass()
+//                .getClassLoader()
+//                .getResource(fileName))
+//                .getPath());
+//
+//        if (filePath == null) {
+//            throw new WebDriverException("File not found: " + filePath);
+//        }
+//
+//        return filePath;
+//    }
 
     /**
      * Type the given text into an an element with the given locator
      */
     protected void type(String text, By locator) {
-        waitForVisibilityOf(locator, 5);
-//        find(locator).clear();
+        find(locator).clear();
         find(locator).sendKeys(text);
     }
 
@@ -252,6 +248,7 @@ public class BasePageObject {
                         (timeOutInSeconds.length > 0 ? timeOutInSeconds[0] : null));
                 break;
             } catch (StaleElementReferenceException e) {
+                e.printStackTrace();
             }
             attempts++;
         }
