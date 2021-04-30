@@ -1,13 +1,16 @@
 package com.herokuapp.theinternet.base;
 
 import org.apache.logging.log4j.Logger;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testng.ITestContext;
 
 import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,79 +18,144 @@ import static com.herokuapp.theinternet.base.ResourceProvider.*;
 
 public class BrowserDriverFactory {
 
-    private ThreadLocal<WebDriver> driver = new ThreadLocal<>();
+    private RemoteWebDriver driver;
     private String browser;
     private Logger log;
     private boolean hasBasicAuthChromeExtension;
+    private String profile;
+    private String mobileDevice;
 
-    public BrowserDriverFactory(String browser, Logger log, boolean hasBasicAuthChromeExtension) {
-        this.browser = browser;
-        this.log = log;
-        this.hasBasicAuthChromeExtension = hasBasicAuthChromeExtension;
-    }
-
-    public WebDriver createDriver() {
+   public RemoteWebDriver createDriver() {
         log.info("Create driver: " + browser);
-        switch (browser) {
-            case "chrome":
-                System.setProperty("webdriver.chrome.driver", ChromeDriverPath);
-                driver.set(new ChromeDriver(setGeneralChromeOptions()));
-                break;
+       DesiredCapabilities capabilities = new DesiredCapabilities();
+       capabilities.setCapability("browserName", browser.toLowerCase());
 
-            case "firefox":
-                System.setProperty("webdriver.gecko.driver", GeckoDriverPath);
-                driver.set(new FirefoxDriver());
-                break;
+       switch(browser.toLowerCase()) {
+           case "chrome": capabilities.setCapability(ChromeOptions.CAPABILITY, setGeneralChromeOptions());
+           case "firefox": capabilities.setCapability(FirefoxOptions.FIREFOX_OPTIONS,setGeneralFirefoxOptions());
+           default: capabilities.setCapability(ChromeOptions.CAPABILITY, setGeneralChromeOptions());
+       }
 
-            default:
-                System.out.println("Unable to launch the browser " + browser + " starting chrome");
-                System.setProperty("webdriver.chrome.driver", ChromeDriverPath);
-                driver.set(new ChromeDriver(setGeneralChromeOptions()));
-                break;
-        }
-        return driver.get();
+       capabilities.setCapability("selenoid:options", Map.<String, Object>of(
+               "enableVNC", true,
+               "enableVideo", false
+       ));
+       try {
+//            driver = new RemoteWebDriver(URI.create(SELENOID_URL).toURL(), capabilities);
+           driver = new RemoteWebDriver(URI.create("http://localhost:8080/wd/hub").toURL(), capabilities);
+       } catch (MalformedURLException e) {
+           e.printStackTrace();
+       }
+        return driver;
     }
 
-    public WebDriver createChromeWithProfile(String profile) {
+    public ChromeOptions createChromeWithProfile(String profile) {
         log.info("Starting chrome driver with profile " + profile);
         ChromeOptions options = setGeneralChromeOptions();
-        options.addArguments("user-data-dir" + ChromeProfilesFolder + File.separator + profile);
-
-        System.setProperty("webdriver.chrome.driver", ChromeDriverPath);
-        driver.set(new ChromeDriver(options));
-        return driver.get();
+        return options.addArguments("user-data-dir" + ChromeProfilesFolder + File.separator + profile);
     }
 
-    public WebDriver createChromeWithMobileEmulation(String deviceName) {
+    public ChromeOptions createChromeWithMobileEmulation(String deviceName) {
         log.info("Starting chrome driver with: " + deviceName + "emulation");
         Map<String, String> mobileEmulation = new HashMap<>();
         mobileEmulation.put("deviceName", deviceName);
         ChromeOptions options = setGeneralChromeOptions();
-        options.setExperimentalOption("mobileEmulation", mobileEmulation);
-
-        System.setProperty("webdriver.chrome.driver", ChromeDriverPath);
-        driver.set(new ChromeDriver(options));
-        return driver.get();
+        return options.setExperimentalOption("mobileEmulation", mobileEmulation);
     }
 
     private ChromeOptions setGeneralChromeOptions() {
         log.info("Set general chrome options");
-        Map<String, Object> chromePrefs = new HashMap<>();
-        chromePrefs.put("download.default_directory", DownloadedFilesFolder);
-
-        ChromeOptions options = new ChromeOptions();
+        ChromeOptions chromeOptions = new ChromeOptions();
+        chromeOptions.setAcceptInsecureCerts(true);
 
         // add basicAuth chrome extension
         if (hasBasicAuthChromeExtension) {
-            options.addExtensions(new File(ChromeExtensionsFolder + File.separator + "basicAuth.crx"));
+            chromeOptions.addExtensions(new File(ChromeExtensionsFolder + File.separator + "basicAuth.crx"));
         }
 
-        return options.setExperimentalOption("prefs", chromePrefs);
+        chromeOptions.setExperimentalOption("prefs", new HashMap<String, Object>(){
+            {
+                put("profile.default_content_settings.popups", 0);
+                put("download.default_directory", DownloadedFilesFolder);
+                put("download.prompt_for_download", false);
+                put("download.directory_upgrade", true);
+                put("safebrowsing.enabled", false);
+                put("plugins.always_open_pdf_externally", true);
+                put("plugins.plugins_disabled", new ArrayList<String>(){
+                    {
+                        add("Chrome PDF Viewer");
+                    }
+                });
+            }
+        });
+       return chromeOptions;
     }
 
-    public static ITestContext setContext(ITestContext iTestContext, WebDriver driver) {
+    private FirefoxOptions setGeneralFirefoxOptions() {
+        log.info("Set general chrome options");
+        FirefoxOptions firefoxOptions = new FirefoxOptions();
+        firefoxOptions.setAcceptInsecureCerts(true);
+        firefoxOptions.setCapability("moz:firefoxOptions", new HashMap<String, Object>(){
+            {
+                put("prefs", new HashMap<String, Object>(){
+                    {
+                        put("browser.helperApps.neverAsk.saveToDisk", "application/octet-stream");
+                    }
+                });
+            }
+        });
+        return firefoxOptions;
+    }
+
+    public static ITestContext setContext(ITestContext iTestContext, RemoteWebDriver driver) {
         iTestContext.setAttribute("driver", driver);
 
         return iTestContext;
+    }
+
+    public static class Builder {
+        private String browser;
+        private Logger log;
+        private boolean hasBasicAuthChromeExtension;
+        private String profile;
+        private String mobileDevice;
+
+        public Builder() {}
+
+        public Builder withBrowser(String browser) {
+            this.browser = browser;
+            return this;
+        }
+
+        public Builder withLog(Logger log) {
+            this.log = log;
+            return this;
+        }
+
+        public Builder withExtension(boolean hasBasicAuthChromeExtension) {
+            this.hasBasicAuthChromeExtension = hasBasicAuthChromeExtension;
+            return this;
+        }
+
+        public Builder withProfile(String profile) {
+            this.profile = profile;
+            return this;
+        }
+
+        public Builder withMobileDevice(String mobileDevice) {
+            this.mobileDevice = mobileDevice;
+            return this;
+        }
+
+        public BrowserDriverFactory build() {
+            BrowserDriverFactory browserDriverFactory = new BrowserDriverFactory();
+            browserDriverFactory.browser = this.browser;
+            browserDriverFactory.log = this.log;
+            browserDriverFactory.hasBasicAuthChromeExtension = this.hasBasicAuthChromeExtension;
+            browserDriverFactory.profile = this.profile;
+            browserDriverFactory.mobileDevice = mobileDevice;
+
+            return browserDriverFactory;
+        }
     }
 }

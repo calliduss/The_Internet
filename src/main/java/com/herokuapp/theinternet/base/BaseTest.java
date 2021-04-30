@@ -4,7 +4,7 @@ import com.testautomationguru.ocular.Ocular;
 import org.aeonbits.owner.ConfigFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testng.ITestContext;
 import org.testng.annotations.*;
 
@@ -17,7 +17,7 @@ public class BaseTest {
     public TestUtilities testUtilities;
     public boolean hasBasicAuthChromeExtension;
 
-    protected WebDriver driver;
+    protected RemoteWebDriver driver;
     protected Logger log;
 
     private static ITestContext context;
@@ -26,7 +26,7 @@ public class BaseTest {
     @BeforeMethod(alwaysRun = true)
     public void setUp(@Optional("chrome") String browser,
                       @Optional String profile,
-                      @Optional String deviceName,
+                      @Optional String mobileDevice,
                       @Optional Object[] isBasicAuthChromeExtensionEnabled,
                       ITestContext context) {
 
@@ -48,15 +48,14 @@ public class BaseTest {
         ConfigFactory.setProperty("env", Servers.PROD.getServer());
         Environment cfg = ConfigFactory.create(Environment.class);
 
-        BrowserDriverFactory factory = new BrowserDriverFactory(browser, log, hasBasicAuthChromeExtension);
+        BrowserDriverFactory factory = new BrowserDriverFactory.Builder()
+                .withBrowser(browser)
+                .withLog(log)
+                .withExtension(hasBasicAuthChromeExtension)
+                .withProfile(profile)
+                .withMobileDevice(mobileDevice).build();
 
-        if (profile != null) {
-            driver = factory.createChromeWithProfile(profile);
-        } else if (deviceName != null) {
-            driver = factory.createChromeWithMobileEmulation(deviceName);
-        } else {
-            driver = factory.createDriver();
-        }
+        driver = factory.createDriver();
 
         driver.manage().window().maximize();
         this.context = setContext(context, driver);
