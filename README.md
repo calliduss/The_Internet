@@ -3,13 +3,15 @@
 Used technologies and frameworks:
 - Java
 - Selenium
-- TestNG
-- AssertJ (rich set of assertions)
-- Ocular (java utility which helps to add the visual validation feature into the existing WebDriver test automation frameworks)
-- Allure (test report tool)
-- log4j 
-- commons io (library of utilities to assist with developing IO functionality)
-- OWNER (handy library to use properties in the simplest possible way)
+- Selenoid - a powerful Golang implementation of original Selenium hub code. It is using Docker to launch browsers.
+- Travis CI - CI/CD tool
+- TestNG;
+- AssertJ - rich set of assertions;
+- Ocular - java utility which helps to add the visual validation feature into the existing WebDriver test automation frameworks;
+- Allure - a tool for creating test reports;
+- log4j; 
+- commons io - library of utilities to assist with developing IO functionality;
+- OWNER - handy library to use properties in the simplest possible way
 
 
 ## Description
