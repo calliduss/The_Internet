@@ -4,7 +4,6 @@ import com.herokuapp.theinternet.base.BaseTest;
 import com.herokuapp.theinternet.pages.DownloadUploadFilePages.FileDownloadPage;
 import com.herokuapp.theinternet.pages.DownloadUploadFilePages.FileUploadPage;
 import com.herokuapp.theinternet.pages.WelcomePage;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
@@ -12,8 +11,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Random;
 
-import static com.herokuapp.theinternet.base.ResourceProvider.*;
 import static org.assertj.core.api.Assertions.*;
+import static org.testng.Assert.assertTrue;
 
 
 public class WorkWithFilesTests extends BaseTest {
@@ -30,7 +29,7 @@ public class WorkWithFilesTests extends BaseTest {
 
         fileDownloadPage.downloadFile(file);
 
-        assertThat(testUtilities.isFileExisted(file, DownloadedFilesFolder));
+        assertTrue(testUtilities.isFileExistedViaSelenoidApi(file, driver.getSessionId()), "file " + file + " was not downloaded!");
     }
 
     @Test
@@ -76,8 +75,8 @@ public class WorkWithFilesTests extends BaseTest {
         assertThat(fileUploadPage.getUploadedFileText()).isEqualTo(fileName + fileExtension);
     }
 
-    @AfterClass
-    private void cleanUp() {
-        testUtilities.cleanUpDirectory(DownloadedFilesFolder);
-    }
+//    @AfterClass
+//    private void cleanUp() {
+//        testUtilities.cleanUpDirectory(DownloadedFilesFolder);
+//    }
 }

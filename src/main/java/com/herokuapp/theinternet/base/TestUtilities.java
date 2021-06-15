@@ -1,5 +1,13 @@
 package com.herokuapp.theinternet.base;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.logging.log4j.Logger;
+import org.openqa.selenium.remote.SessionId;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -8,9 +16,17 @@ import java.util.Arrays;
 import java.util.Objects;
 import java.util.Random;
 
+
+import static com.herokuapp.theinternet.base.ResourceProvider.SELENOID_DOWNLOAD_API;
 import static com.herokuapp.theinternet.base.ResourceProvider.TempFilesFolder;
 
 public class TestUtilities {
+
+    protected Logger log;
+
+    public TestUtilities(Logger log) {
+        this.log = log;
+    }
 
     public String generateRandomStringValue() {
         String ALLOWED_CHARS = "abcdefghijklmnopqrstuvwxyz1234567890";
@@ -53,6 +69,23 @@ public class TestUtilities {
             }
         }
         return false;
+    }
+
+    public boolean isFileExistedViaSelenoidApi(String expectedFileName, SessionId sessionId) {
+//        HttpUriRequest request = new HttpGet(SELENOID_DOWNLOAD_API + sessionId.toString() + "/" + expectedFileName);
+        HttpUriRequest request = new HttpGet("http://localhost:4444/download/" + sessionId.toString() + "/" + expectedFileName);
+        try {
+            log.info("Execute GET request: " + request.toString());
+            HttpResponse response = HttpClientBuilder.create().build().execute(request);
+            var statusCode = response.getStatusLine().getStatusCode();
+            if (statusCode != HttpStatus.SC_OK) {
+                log.info("Status code " + statusCode);
+                return false;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return true;
     }
 
     public static boolean isStringNullOrWhiteSpace(String value) {

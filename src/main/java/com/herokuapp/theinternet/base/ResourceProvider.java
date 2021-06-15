@@ -10,10 +10,10 @@ public class ResourceProvider {
             + File.separator + ("resources")
             + File.separator;
 
-//    public static String DownloadedFilesFolder = RESOURCES_PATH + "DownloadedFiles";
-    public static String DownloadedFilesFolder = File.separator + "home" + File.separator + "selenium" + File.separator + "Downloads";
+    public static String DownloadedFilesFolder = "/home/selenium/Downloads";
     public static String ChromeProfilesFolder = RESOURCES_PATH + "ChromeProfiles";
     public static String ChromeExtensionsFolder = RESOURCES_PATH + "ChromeExtensions";
     public static String TempFilesFolder = RESOURCES_PATH + "TempFiles";
     public static String SELENOID_URL = "http://selenoid:4444/wd/hub";
+    public static String SELENOID_DOWNLOAD_API = "http://selenoid:4444/download/";
 }

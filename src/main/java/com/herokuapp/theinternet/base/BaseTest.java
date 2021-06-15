@@ -30,8 +30,6 @@ public class BaseTest {
                       @Optional Object[] isBasicAuthChromeExtensionEnabled,
                       ITestContext context) {
 
-        testUtilities = new TestUtilities();
-
         if (isBasicAuthChromeExtensionEnabled.length > 0) {
             hasBasicAuthChromeExtension = (boolean) isBasicAuthChromeExtensionEnabled[0];
         }
@@ -56,6 +54,8 @@ public class BaseTest {
                 .withMobileDevice(mobileDevice).build();
 
         driver = factory.createDriver();
+
+        testUtilities = new TestUtilities(log);
 
         driver.manage().window().maximize();
         this.context = setContext(context, driver);

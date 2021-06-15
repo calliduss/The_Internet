@@ -26,7 +26,7 @@ public class BrowserDriverFactory {
     private String mobileDevice;
 
    public RemoteWebDriver createDriver() {
-        log.info("Create driver: " + browser);
+       log.info("Create driver: " + browser);
        DesiredCapabilities capabilities = new DesiredCapabilities();
        capabilities.setCapability("browserName", browser.toLowerCase());
 

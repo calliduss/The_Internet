@@ -1,0 +1,32 @@
+sudo: required
+language: java
+jdk:
+  - openjdk11
+services:
+  - docker
+
+before_install:
+  # install and run selenoid on virtual machine
+  - curl -L -o cm https://github.com/aerokube/cm/releases/download/1.8.0/cm_linux_amd64
+  - chmod +x ./cm
+  - ./cm selenoid start --vnc
+#  - mvn clean test
+
+script:
+  - docker ps -a
+#  - docker images -a
+  - curl docker:4444/status
+  - curl http://docker:4444/status
+#  - curl -XPOST http://docker:4444/wd/hub/session -d '{"desiredCapabilities":{"browserName":"chrome"}}'
+#  - docker ps -a
+  - mvn clean test
+
+after_script:
+  - mvn allure:serve #Build reports to temp folder and view:
+  - mvn allure:report #Build reports and save to target/site
+
+#deploy:
+#  provider: script
+#  script: bash ./deploy.sh
+#  on:
+#    branch: master

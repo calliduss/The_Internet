@@ -21,7 +21,7 @@
         <maven.surefire.plugin.version>3.0.0-M3</maven.surefire.plugin.version>
         <apache.httpcomponents.version>4.5.10</apache.httpcomponents.version>
         <ocular.version>1.0.0.Alpha</ocular.version>
-        <suiteXmlFilePath>src/test/resources/TestSuites/SmokeTestSuite.xml</suiteXmlFilePath>
+        <suiteXmlFilePath>src/test/resources/TestSuites/FullTestSuite.xml</suiteXmlFilePath>
     </properties>
 
     <dependencies>

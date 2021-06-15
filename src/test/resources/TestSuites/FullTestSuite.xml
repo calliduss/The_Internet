@@ -1,0 +1,17 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+
+<suite name="FullUITestSuite" verbose="1" parallel="tests" thread-count="4">
+
+    <test name="LoginTests">
+        <classes>
+            <class name="com.herokuapp.theinternet.LoginTests" />
+        </classes>
+    </test>
+
+    <test name="WorkWithFilesTests">
+        <classes>
+            <class name="com.herokuapp.theinternet.WorkWithFilesTests" />
+        </classes>
+    </test>
+
+</suite>
