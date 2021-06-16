@@ -4,6 +4,7 @@ import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.LocalFileDetector;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testng.ITestContext;
 
@@ -43,6 +44,9 @@ public class BrowserDriverFactory {
        try {
 //            driver = new RemoteWebDriver(URI.create(SELENOID_URL).toURL(), capabilities);
            driver = new RemoteWebDriver(URI.create("http://localhost:8080/wd/hub").toURL(), capabilities);
+
+           // to upload local files to remote Selenium instance
+           driver.setFileDetector(new LocalFileDetector());
        } catch (MalformedURLException e) {
            e.printStackTrace();
        }
