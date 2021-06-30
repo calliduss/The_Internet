@@ -2,6 +2,7 @@ package com.herokuapp.theinternet.base;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -12,6 +13,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.file.FileAlreadyExistsException;
+import java.nio.file.NoSuchFileException;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Random;
@@ -86,6 +88,22 @@ public class TestUtilities {
             e.printStackTrace();
         }
         return true;
+    }
+
+    public void deleteFileInsideDockerDirectoryViaApi(String filepath, SessionId sessionId) {
+//        HttpUriRequest request = new HttpGet(SELENOID_DOWNLOAD_API + sessionId.toString() + "/" + filepath);
+        HttpUriRequest request = new HttpDelete("http://localhost:4444/download/" + sessionId.toString() + "/" + filepath);
+        try {
+            log.info("Execute DELETE request: " + request.toString());
+            HttpResponse response = HttpClientBuilder.create().build().execute(request);
+            var statusCode = response.getStatusLine().getStatusCode();
+            if (statusCode != HttpStatus.SC_OK) {
+                log.info("Status code " + statusCode);
+                throw new NoSuchFileException("File does not exist");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public static boolean isStringNullOrWhiteSpace(String value) {

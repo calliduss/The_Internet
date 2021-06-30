@@ -29,7 +29,8 @@ public class WorkWithFilesTests extends BaseTest {
 
         fileDownloadPage.downloadFile(file);
 
-        assertTrue(testUtilities.isFileExistedViaSelenoidApi(file, driver.getSessionId()), "file " + file + " was not downloaded!");
+        assertTrue(testUtilities.isFileExistedViaSelenoidApi(file, sessionId), "file " + file + " was not downloaded!");
+        testUtilities.deleteFileInsideDockerDirectoryViaApi(file, sessionId);
     }
 
     @Test
@@ -74,9 +75,4 @@ public class WorkWithFilesTests extends BaseTest {
 
         assertThat(fileUploadPage.getUploadedFileText()).isEqualTo(fileName + fileExtension);
     }
-
-//    @AfterClass
-//    private void cleanUp() {
-//        testUtilities.cleanUpDirectory(DownloadedFilesFolder);
-//    }
 }
