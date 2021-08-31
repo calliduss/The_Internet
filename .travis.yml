@@ -14,9 +14,7 @@ before_install:
 
 script:
   - docker ps -a
-#  - docker images -a
-  - curl docker:4444/status
-  - curl http://docker:4444/status
+  - docker images -a
 #  - curl -XPOST http://docker:4444/wd/hub/session -d '{"desiredCapabilities":{"browserName":"chrome"}}'
 #  - docker ps -a
   - mvn clean test
