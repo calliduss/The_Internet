@@ -42,8 +42,9 @@ public class BrowserDriverFactory {
                "enableVideo", false
        ));
        try {
-            driver = new RemoteWebDriver(URI.create(SELENOID_URL).toURL(), capabilities);
+//            driver = new RemoteWebDriver(URI.create(SELENOID_URL).toURL(), capabilities);
 //           driver = new RemoteWebDriver(URI.create("http://localhost:8080/wd/hub").toURL(), capabilities);
+           driver = new RemoteWebDriver(URI.create("http://localhost:4444/wd/hub").toURL(), capabilities);
 
            // to upload local files to remote Selenium instance
            driver.setFileDetector(new LocalFileDetector());
