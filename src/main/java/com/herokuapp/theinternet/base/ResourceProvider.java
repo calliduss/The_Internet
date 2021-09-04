@@ -14,6 +14,6 @@ public class ResourceProvider {
     public static String ChromeProfilesFolder = RESOURCES_PATH + "ChromeProfiles";
     public static String ChromeExtensionsFolder = RESOURCES_PATH + "ChromeExtensions";
     public static String TempFilesFolder = RESOURCES_PATH + "TempFiles";
-    public static String SELENOID_URL = "http://selenoid:4444/wd/hub";
-    public static String SELENOID_DOWNLOAD_API = "http://selenoid:4444/download/";
+    public static String SELENOID_URL = "http://localhost:4444/wd/hub";
+    public static String SELENOID_DOWNLOAD_API = "http://localhost:4444/download/";
 }

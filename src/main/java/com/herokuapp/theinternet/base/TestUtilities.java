@@ -74,8 +74,7 @@ public class TestUtilities {
     }
 
     public boolean isFileExistedViaSelenoidApi(String expectedFileName, SessionId sessionId) {
-//        HttpUriRequest request = new HttpGet(SELENOID_DOWNLOAD_API + sessionId.toString() + "/" + expectedFileName);
-        HttpUriRequest request = new HttpGet("http://localhost:4444/download/" + sessionId.toString() + "/" + expectedFileName);
+        HttpUriRequest request = new HttpGet(SELENOID_DOWNLOAD_API + sessionId.toString() + "/" + expectedFileName);
         try {
             log.info("Execute GET request: " + request.toString());
             HttpResponse response = HttpClientBuilder.create().build().execute(request);
@@ -91,8 +90,7 @@ public class TestUtilities {
     }
 
     public void deleteFileInsideDockerDirectoryViaApi(String filepath, SessionId sessionId) {
-//        HttpUriRequest request = new HttpGet(SELENOID_DOWNLOAD_API + sessionId.toString() + "/" + filepath);
-        HttpUriRequest request = new HttpDelete("http://localhost:4444/download/" + sessionId.toString() + "/" + filepath);
+        HttpUriRequest request = new HttpGet(SELENOID_DOWNLOAD_API + sessionId.toString() + "/" + filepath);
         try {
             log.info("Execute DELETE request: " + request.toString());
             HttpResponse response = HttpClientBuilder.create().build().execute(request);
