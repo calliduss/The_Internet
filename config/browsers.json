@@ -16,6 +16,7 @@
       "latest": {
         "image": "selenoid/chrome",
         "port": "4444",
+        "path": "/",
         "tmpfs": {"/tmp": "size=512m", "/var": "size=128m"}
       }
     }

@@ -7,9 +7,10 @@ services:
 
 before_install:
   # install and run selenoid on virtual machine
-  - curl -L -o cm https://github.com/aerokube/cm/releases/download/1.8.0/cm_linux_amd64
+  - curl -L -o cm https://github.com/aerokube/cm/releases/download/1.8.1/cm_linux_amd64
   - chmod +x ./cm
   - ./cm selenoid start --vnc
+  - sudo usermod -aG docker $USER
 #  - mvn clean test
 
 script:
