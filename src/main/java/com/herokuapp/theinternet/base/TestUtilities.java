@@ -12,11 +12,11 @@ import org.openqa.selenium.remote.SessionId;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
-import java.nio.file.FileAlreadyExistsException;
-import java.nio.file.NoSuchFileException;
+import java.nio.file.*;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Random;
+import java.util.stream.Stream;
 
 
 import static com.herokuapp.theinternet.base.ResourceProvider.SELENOID_DOWNLOAD_API;
@@ -121,6 +121,22 @@ public class TestUtilities {
         if (isStringNullOrWhiteSpace(fileName) && isStringNullOrWhiteSpace(fileExtension)) {
             throw new IllegalArgumentException("File name and file extension must be specified!");
         }
+        log.info("filename is: " + fileName);
+        log.info("file extension is: " + fileExtension);
+        log.info("tempfolder is: " + TempFilesFolder);
+        log.info("file size is: " + sizeInBytes);
+
+//        Process p = Runtime.getRuntime().exec(new String[]{"/bin/sh",
+//                "-c",
+//                "cd /home/selenium; ls"});
+
+        log.info("list selenium folder content");
+        try (Stream<Path> paths = Files.walk(Paths.get("/home/selenium"))) {
+            paths.filter(Files::isRegularFile)
+                    .forEach(System.out::println);
+
+        }
+        
         File file = new File(TempFilesFolder + File.separator, fileName + fileExtension);
         if (file.exists()) {
             throw new FileAlreadyExistsException("file with name " + fileName + " already exists");
@@ -128,6 +144,7 @@ public class TestUtilities {
 
         RandomAccessFile randomAccessFile = new RandomAccessFile(file, "rw");
         try (randomAccessFile) {
+            log.info("creating random file");
             randomAccessFile.setLength(sizeInBytes);
         }
         return file.getAbsolutePath();
