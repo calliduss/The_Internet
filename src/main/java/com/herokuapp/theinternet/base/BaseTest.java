@@ -9,6 +9,7 @@ import org.openqa.selenium.remote.SessionId;
 import org.testng.ITestContext;
 import org.testng.annotations.*;
 
+import java.lang.reflect.Method;
 import java.nio.file.Paths;
 
 import static com.herokuapp.theinternet.base.BrowserDriverFactory.setContext;
@@ -26,7 +27,8 @@ public class BaseTest {
 
     @Parameters({"browser", "chromeProfile", "deviceName"})
     @BeforeMethod(alwaysRun = true)
-    public void setUp(@Optional("chrome") String browser,
+    public void setUp(Method method,
+                      @Optional("chrome") String browser,
                       @Optional String profile,
                       @Optional String mobileDevice,
                       @Optional Object[] isBasicAuthChromeExtensionEnabled,
@@ -61,12 +63,14 @@ public class BaseTest {
 
         driver.manage().window().maximize();
         this.context = setContext(context, driver);
+        log.info("Running test: " + method.getName());
 
         driver.get(cfg.url());
     }
 
     @AfterMethod(alwaysRun = true)
-    public void tearDown() {
+    public void tearDown(Method method) {
+        log.info("End of " + method.getName() + " test");
         log.info("Close driver");
         driver.quit();
     }

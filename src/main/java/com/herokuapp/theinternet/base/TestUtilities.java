@@ -122,18 +122,10 @@ public class TestUtilities {
         log.info("tempfolder is: " + TempFilesFolder);
         log.info("file size is: " + sizeInBytes);
 
-//        Process p = Runtime.getRuntime().exec(new String[]{"/bin/sh",
-//                "-c",
-//                "cd /home/selenium; ls"});
-
         log.info("list selenium folder content: ");
-        String[] pathNames;
-        File f = new File("/home/selenium");
-        pathNames = f.list();
-
-        for (String pathname : pathNames) {
-            log.info("path is: " + pathname);
-        }
+        Process p = Runtime.getRuntime().exec(new String[]{"/bin/sh",
+                "-c",
+                "cd /home/selenium; ls"});
 
         File file = new File(TempFilesFolder + File.separator, fileName + fileExtension);
         if (file.exists()) {
@@ -142,13 +134,12 @@ public class TestUtilities {
 
         RandomAccessFile randomAccessFile = new RandomAccessFile(file, "rw");
         try (randomAccessFile) {
-            log.info("creating random file");
             randomAccessFile.setLength(sizeInBytes);
         }
         return file.getAbsolutePath();
     }
 
-    public String createTempFile(String fileName, String fileExtension) {
+    public String createTempFile(String fileName, String fileExtension) throws IOException {
         if (isStringNullOrWhiteSpace(fileName) && isStringNullOrWhiteSpace(fileExtension)) {
             throw new IllegalArgumentException("File name and file extension must be specified!");
         }
@@ -157,18 +148,10 @@ public class TestUtilities {
         log.info("file extension is: " + fileExtension);
         log.info("tempfolder is: " + TempFilesFolder);
 
-//        Process p = Runtime.getRuntime().exec(new String[]{"/bin/sh",
-//                "-c",
-//                "cd /home/selenium; ls"});
-
         log.info("list selenium folder content: ");
-        String[] pathNames;
-        File f = new File("/home/selenium");
-        pathNames = f.list();
-
-        for (String pathname : pathNames) {
-            log.info("path is: " + pathname);
-        }
+        Process p = Runtime.getRuntime().exec(new String[]{"/bin/sh",
+                "-c",
+                "cd /home/selenium; ls"});
 
         File file = new File(TempFilesFolder + File.separator, fileName + fileExtension);
 
