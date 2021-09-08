@@ -122,11 +122,6 @@ public class TestUtilities {
         log.info("tempfolder is: " + TempFilesFolder);
         log.info("file size is: " + sizeInBytes);
 
-        log.info("list selenium folder content: ");
-        Process p = Runtime.getRuntime().exec(new String[]{"/bin/sh",
-                "-c",
-                "cd /home/selenium; ls"});
-
         File file = new File(TempFilesFolder + File.separator, fileName + fileExtension);
         if (file.exists()) {
             throw new FileAlreadyExistsException("file with name " + fileName + " already exists");
@@ -139,7 +134,7 @@ public class TestUtilities {
         return file.getAbsolutePath();
     }
 
-    public String createTempFile(String fileName, String fileExtension) throws IOException {
+    public String createTempFile(String fileName, String fileExtension) {
         if (isStringNullOrWhiteSpace(fileName) && isStringNullOrWhiteSpace(fileExtension)) {
             throw new IllegalArgumentException("File name and file extension must be specified!");
         }
@@ -148,20 +143,18 @@ public class TestUtilities {
         log.info("file extension is: " + fileExtension);
         log.info("tempfolder is: " + TempFilesFolder);
 
-        log.info("list selenium folder content: ");
-        Process p = Runtime.getRuntime().exec(new String[]{"/bin/sh",
-                "-c",
-                "cd /home/selenium; ls"});
-
         File file = new File(TempFilesFolder + File.separator, fileName + fileExtension);
 
         try {
             if (file.exists()) {
                 throw new FileAlreadyExistsException("file with name " + fileName + " already exists");
             } else {
+                log.info("start creating file: ");
                 file.createNewFile();
+                log.info("file created!");
             }
         } catch (IOException e) {
+            log.info("file has not been created!");
             e.printStackTrace();
         }
         return file.getAbsolutePath();
