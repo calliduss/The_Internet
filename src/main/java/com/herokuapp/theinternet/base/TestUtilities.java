@@ -9,6 +9,7 @@ import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.remote.SessionId;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.file.*;
@@ -113,7 +114,7 @@ public class TestUtilities {
         return true;
     }
 
-    public String createTempFile(String fileName, String fileExtension, long sizeInBytes) throws IOException {
+    public String createTempFile(String fileName, String fileExtension, long sizeInBytes) throws FileNotFoundException {
         if (isStringNullOrWhiteSpace(fileName) && isStringNullOrWhiteSpace(fileExtension)) {
             throw new IllegalArgumentException("File name and file extension must be specified!");
         }
@@ -122,14 +123,16 @@ public class TestUtilities {
         log.info("tempfolder is: " + TempFilesFolder);
         log.info("file size is: " + sizeInBytes);
 
-        File file = new File(TempFilesFolder + File.separator, fileName + fileExtension);
-        if (file.exists()) {
-            throw new FileAlreadyExistsException("file with name " + fileName + " already exists");
-        }
+        File file = new File(TempFilesFolder + File.separator + fileName + fileExtension);
 
         RandomAccessFile randomAccessFile = new RandomAccessFile(file, "rw");
         try (randomAccessFile) {
+            log.info("start creating file: ");
             randomAccessFile.setLength(sizeInBytes);
+            log.info("file created!");
+        } catch (IOException e) {
+            log.info("file has not been created!");
+            e.printStackTrace();
         }
         return file.getAbsolutePath();
     }
@@ -143,7 +146,7 @@ public class TestUtilities {
         log.info("file extension is: " + fileExtension);
         log.info("tempfolder is: " + TempFilesFolder);
 
-        File file = new File(TempFilesFolder + File.separator, fileName + fileExtension);
+        File file = new File(TempFilesFolder + File.separator + fileName + fileExtension);
 
         try {
             if (file.exists()) {

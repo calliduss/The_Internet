@@ -47,7 +47,7 @@ public class WorkWithFilesTests extends BaseTest {
             file = testUtilities.createTempFile(fileName, fileExtension, fileSize);
             fileUploadPage.uploadFile(file);
         } finally {
-            Files.deleteIfExists(Paths.get(file));
+//            Files.deleteIfExists(Paths.get(file));
         }
 
         assertThat(fileUploadPage.getUploadedFileText()).isEqualTo(fileName + fileExtension);
@@ -66,11 +66,11 @@ public class WorkWithFilesTests extends BaseTest {
             file = testUtilities.createTempFile(fileName, fileExtension);
             fileUploadPage.dragAndDropFileUpload(file);
         } finally {
-            try {
-                Files.deleteIfExists(Paths.get(file));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+//            try {
+//                Files.deleteIfExists(Paths.get(file));
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
         }
 
         assertThat(fileUploadPage.getUploadedFileText()).isEqualTo(fileName + fileExtension);
