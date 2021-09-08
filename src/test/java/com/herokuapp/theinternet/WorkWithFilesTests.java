@@ -31,6 +31,7 @@ public class WorkWithFilesTests extends BaseTest {
 
         assertTrue(testUtilities.isFileExistedViaSelenoidApi(file, sessionId), "file " + file + " was not downloaded!");
         testUtilities.deleteFileInsideDockerDirectoryViaApi(file, sessionId);
+        log.info("End of downloadFileFromList test");
     }
 
     @Test
@@ -51,10 +52,11 @@ public class WorkWithFilesTests extends BaseTest {
         }
 
         assertThat(fileUploadPage.getUploadedFileText()).isEqualTo(fileName + fileExtension);
+        log.info("End of uploadFileViaButton test");
     }
 
     @Test
-    public void uploadFileUsingDragAndDrop() {
+    public void uploadFileUsingDragAndDrop() throws IOException {
         var fileName = testUtilities.generateRandomStringValue();
         var fileExtension = ".pdf";
         var fileUploadPage = new FileUploadPage(driver, log);
@@ -74,5 +76,6 @@ public class WorkWithFilesTests extends BaseTest {
         }
 
         assertThat(fileUploadPage.getUploadedFileText()).isEqualTo(fileName + fileExtension);
+        log.info("End of uploadFileUsingDragAndDrop test");
     }
 }

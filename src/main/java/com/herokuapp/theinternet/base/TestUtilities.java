@@ -2,7 +2,6 @@ package com.herokuapp.theinternet.base;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
-import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -16,11 +15,8 @@ import java.nio.file.*;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Random;
-import java.util.stream.Stream;
 
-
-import static com.herokuapp.theinternet.base.ResourceProvider.SELENOID_DOWNLOAD_API;
-import static com.herokuapp.theinternet.base.ResourceProvider.TempFilesFolder;
+import static com.herokuapp.theinternet.base.ResourceProvider.*;
 
 public class TestUtilities {
 
@@ -130,13 +126,15 @@ public class TestUtilities {
 //                "-c",
 //                "cd /home/selenium; ls"});
 
-        log.info("list selenium folder content");
-        try (Stream<Path> paths = Files.walk(Paths.get("/home/selenium"))) {
-            paths.filter(Files::isRegularFile)
-                    .forEach(System.out::println);
+        log.info("list selenium folder content: ");
+        String[] pathNames;
+        File f = new File("/home/selenium");
+        pathNames = f.list();
 
+        for (String pathname : pathNames) {
+            log.info("path is: " + pathname);
         }
-        
+
         File file = new File(TempFilesFolder + File.separator, fileName + fileExtension);
         if (file.exists()) {
             throw new FileAlreadyExistsException("file with name " + fileName + " already exists");
@@ -153,6 +151,23 @@ public class TestUtilities {
     public String createTempFile(String fileName, String fileExtension) {
         if (isStringNullOrWhiteSpace(fileName) && isStringNullOrWhiteSpace(fileExtension)) {
             throw new IllegalArgumentException("File name and file extension must be specified!");
+        }
+
+        log.info("filename is: " + fileName);
+        log.info("file extension is: " + fileExtension);
+        log.info("tempfolder is: " + TempFilesFolder);
+
+//        Process p = Runtime.getRuntime().exec(new String[]{"/bin/sh",
+//                "-c",
+//                "cd /home/selenium; ls"});
+
+        log.info("list selenium folder content: ");
+        String[] pathNames;
+        File f = new File("/home/selenium");
+        pathNames = f.list();
+
+        for (String pathname : pathNames) {
+            log.info("path is: " + pathname);
         }
 
         File file = new File(TempFilesFolder + File.separator, fileName + fileExtension);
