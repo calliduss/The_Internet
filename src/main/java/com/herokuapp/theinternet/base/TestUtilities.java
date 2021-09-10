@@ -118,20 +118,13 @@ public class TestUtilities {
         if (isStringNullOrWhiteSpace(fileName) && isStringNullOrWhiteSpace(fileExtension)) {
             throw new IllegalArgumentException("File name and file extension must be specified!");
         }
-        log.info("filename is: " + fileName);
-        log.info("file extension is: " + fileExtension);
-        log.info("tempfolder is: " + TempFilesFolder);
-        log.info("file size is: " + sizeInBytes);
 
         File file = new File(TempFilesFolder + File.separator + fileName + fileExtension);
 
         RandomAccessFile randomAccessFile = new RandomAccessFile(file, "rw");
         try (randomAccessFile) {
-            log.info("start creating file: ");
             randomAccessFile.setLength(sizeInBytes);
-            log.info("file created!");
         } catch (IOException e) {
-            log.info("file has not been created!");
             e.printStackTrace();
         }
         return file.getAbsolutePath();
@@ -142,22 +135,15 @@ public class TestUtilities {
             throw new IllegalArgumentException("File name and file extension must be specified!");
         }
 
-        log.info("filename is: " + fileName);
-        log.info("file extension is: " + fileExtension);
-        log.info("tempfolder is: " + TempFilesFolder);
-
         File file = new File(TempFilesFolder + File.separator + fileName + fileExtension);
 
         try {
             if (file.exists()) {
                 throw new FileAlreadyExistsException("file with name " + fileName + " already exists");
             } else {
-                log.info("start creating file: ");
                 file.createNewFile();
-                log.info("file created!");
             }
         } catch (IOException e) {
-            log.info("file has not been created!");
             e.printStackTrace();
         }
         return file.getAbsolutePath();

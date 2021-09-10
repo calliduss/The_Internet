@@ -47,14 +47,14 @@ public class WorkWithFilesTests extends BaseTest {
             file = testUtilities.createTempFile(fileName, fileExtension, fileSize);
             fileUploadPage.uploadFile(file);
         } finally {
-//            Files.deleteIfExists(Paths.get(file));
+            Files.deleteIfExists(Paths.get(file));
         }
 
         assertThat(fileUploadPage.getUploadedFileText()).isEqualTo(fileName + fileExtension);
     }
 
     @Test
-    public void uploadFileUsingDragAndDrop() {
+    public void uploadFileUsingDragAndDrop() throws IOException {
         var fileName = testUtilities.generateRandomStringValue();
         var fileExtension = ".pdf";
         var fileUploadPage = new FileUploadPage(driver, log);
@@ -66,11 +66,7 @@ public class WorkWithFilesTests extends BaseTest {
             file = testUtilities.createTempFile(fileName, fileExtension);
             fileUploadPage.dragAndDropFileUpload(file);
         } finally {
-//            try {
-//                Files.deleteIfExists(Paths.get(file));
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
+            Files.deleteIfExists(Paths.get(file));
         }
 
         assertThat(fileUploadPage.getUploadedFileText()).isEqualTo(fileName + fileExtension);
