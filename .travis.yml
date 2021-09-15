@@ -11,13 +11,10 @@ before_install:
   - chmod +x ./cm
   - ./cm selenoid start --vnc
   - sudo usermod -aG docker $USER
-#  - mvn clean test
 
 script:
   - docker ps -a
   - docker images -a
-#  - curl -XPOST http://docker:4444/wd/hub/session -d '{"desiredCapabilities":{"browserName":"chrome"}}'
-#  - docker ps -a
   - mvn clean test
 
 after_script:
