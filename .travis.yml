@@ -15,11 +15,11 @@ before_install:
 script:
   - docker ps -a
   - docker images -a
-  - mvn clean test
+  - mvn clean test #Runs tests and generates target/allure-results
 
 after_script:
-  - mvn allure:serve #Build reports to temp folder and view:
-  - mvn allure:report #Build reports and save to target/site
+#  - mvn allure:serve #Build reports to temp folder and view:
+#  - mvn allure:report #Build reports and save to target/site
 
 #deploy:
 #  provider: script

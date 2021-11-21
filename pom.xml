@@ -22,6 +22,8 @@
         <apache.httpcomponents.version>4.5.10</apache.httpcomponents.version>
         <ocular.version>1.0.0.Alpha</ocular.version>
         <suiteXmlFilePath>src/test/resources/TestSuites/FullTestSuite.xml</suiteXmlFilePath>
+        <aspectj.version>1.9.7</aspectj.version>
+        <allure.testng.version>2.15.0</allure.testng.version>
     </properties>
 
     <dependencies>
@@ -78,6 +80,12 @@
             <artifactId>ocular</artifactId>
             <version>${ocular.version}</version>
         </dependency>
+        <dependency>
+            <groupId>io.qameta.allure</groupId>
+            <artifactId>allure-testng</artifactId>
+            <version>${allure.testng.version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -98,7 +106,17 @@
                     <suiteXmlFiles>
                         <suiteXmlFile>${suiteXmlFilePath}</suiteXmlFile>
                     </suiteXmlFiles>
+                    <argLine>
+                        -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"
+                    </argLine>
                 </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.aspectj</groupId>
+                        <artifactId>aspectjweaver</artifactId>
+                        <version>${aspectj.version}</version>
+                    </dependency>
+                </dependencies>
             </plugin>
         </plugins>
     </build>
